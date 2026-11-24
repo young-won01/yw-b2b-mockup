@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>빼기 B2B 서비스 시안</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Chakra+Petch:wght@500;600;700&display=swap">
+<style>
+/* Layout: 첫 화면 자체가 계근대 저울 — 왼쪽은 말, 오른쪽은 견적 저울 패널. 나머지는 조용한 왼쪽 정렬 문서 흐름.
+   Principle: 대담함은 저울 숫자판 하나에만. 나머지는 코발트 잉크와 차가운 회백색으로 절제. */
+:root {
+  --paper: #eff1ee;
+  --sheet: #ffffff;
+  --ink: #141b24;
+  --soft: #56606b;
+  --rule: #cfd5d9;
+  --cobalt: #2343c7;
+  --cobalt-ink: #ffffff;
+  --panel: #1a2330;
+  --panel-fg: #e9edf1;
+  --panel-soft: #9aa7b5;
+  --readout: #ffd23f;
+  --ok: #1d7a4c;
+  --text: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --digits: "Chakra Petch", "IBM Plex Sans KR", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #11161c; --sheet: #19202a; --ink: #e8ecef; --soft: #9ba6b1; --rule: #2c3541;
+    --cobalt: #6d88ff; --cobalt-ink: #0b1230; --panel: #0b1016; --panel-fg: #e9edf1; --panel-soft: #8e9bab;
+    --readout: #ffd23f; --ok: #4fc68b; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #11161c; --sheet: #19202a; --ink: #e8ecef; --soft: #9ba6b1; --rule: #2c3541;
+  --cobalt: #6d88ff; --cobalt-ink: #0b1230; --panel: #0b1016; --panel-fg: #e9edf1; --panel-soft: #8e9bab;
+  --readout: #ffd23f; --ok: #4fc68b; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--text); font-size: 16px; line-height: 1.65; word-break: keep-all; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { margin: 0; line-height: 1.3; text-wrap: balance; }
+h1 { font-size: clamp(2rem, 4.6vw, 3.2rem); font-weight: 700; letter-spacing: -0.025em; }
+h2 { font-size: clamp(1.45rem, 2.8vw, 1.95rem); font-weight: 700; letter-spacing: -0.015em; }
+h3 { font-size: 1.06rem; font-weight: 600; }
+p { margin: 0; }
+button, input, select { font: inherit; }
+:focus-visible { outline: 2px solid var(--cobalt); outline-offset: 2px; }
+
+/* 시안 고지 띠 */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--ink); }
+.notice { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 9; background: var(--ink); color: var(--paper); font-size: 0.82rem; }
+.notice .wrap { padding-block: 0.45rem; }
+
+/* 헤더 */
+.top { border-bottom: 1px solid var(--rule); background: var(--sheet); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding-block: 0.9rem; }
+.brand { font-weight: 700; font-size: 1.15rem; letter-spacing: -0.02em; }
+.brand small { font-weight: 500; color: var(--soft); font-size: 0.85rem; margin-left: 0.4rem; }
+.tabs { display: flex; gap: 0.25rem; background: var(--paper); padding: 0.25rem; border-radius: 999px; }
+.tabs a { text-decoration: none; color: var(--soft); padding: 0.4rem 1rem; border-radius: 999px; font-weight: 500; font-size: 0.95rem; }
+.tabs a[aria-current="page"] { background: var(--ink); color: var(--paper); }
+
+section { padding-block: 4rem; }
+.lead { color: var(--soft); max-width: 60ch; margin-top: 0.75rem; }
+
+/* 히어로 */
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 3rem; align-items: center; padding-block: 3.5rem 4rem; }
+@media (max-width: 860px) { .hero .wrap { grid-template-columns: minmax(0, 1fr); gap: 2rem; } }
+.hero .sub { color: var(--soft); font-size: 1.08rem; margin-top: 1.1rem; max-width: 34ch; }
+.gets { list-style: none; padding: 0; margin: 1.75rem 0 0; display: grid; gap: 0.6rem; }
+.gets li { display: grid; grid-template-columns: 1.4rem 1fr; gap: 0.5rem; }
+.gets li::before { content: ""; width: 0.55rem; height: 0.55rem; background: var(--cobalt); border-radius: 50%; margin-top: 0.55rem; }
+
+/* 저울 패널 */
+.scale { background: var(--panel); color: var(--panel-fg); border-radius: 18px; padding: 1.5rem; display: grid; gap: 1.1rem; min-width: 0; }
+.scale .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+@media (max-width: 480px) { .scale .row2 { grid-template-columns: 1fr; } }
+.scale label { display: grid; gap: 0.35rem; font-size: 0.88rem; color: var(--panel-soft); }
+.scale select, .scale input[type="number"] { background: rgba(255,255,255,0.06); color: var(--panel-fg); border: 1px solid rgba(255,255,255,0.16); border-radius: 10px; padding: 0.65rem 0.75rem; width: 100%; }
+.scale select option { color: #141b24; }
+.drop { border: 1.5px dashed rgba(255,255,255,0.28); border-radius: 12px; padding: 1rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+.drop input { color: var(--panel-soft); font-size: 0.85rem; max-width: 100%; }
+.drop .t { font-weight: 600; }
+.ai { font-size: 0.88rem; color: var(--panel-soft); min-height: 1.5em; }
+.ai b { color: var(--panel-fg); font-weight: 600; }
+.readout { background: #06090d; border-radius: 12px; padding: 1.1rem 1.25rem; display: grid; gap: 0.2rem; }
+.readout .cap { font-size: 0.85rem; color: var(--panel-soft); }
+.readout .big { font-family: var(--digits); color: var(--readout); font-size: clamp(2.2rem, 6vw, 3.1rem); font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; letter-spacing: 0.01em; }
+.readout .big span { font-size: 0.5em; margin-left: 0.2em; }
+.readout .meta { display: flex; flex-wrap: wrap; gap: 0.3rem 1.25rem; font-size: 0.88rem; color: var(--panel-soft); font-variant-numeric: tabular-nums; }
+.readout .meta b { color: var(--panel-fg); font-weight: 600; }
+.btn { border: 0; border-radius: 10px; background: var(--cobalt); color: var(--cobalt-ink); font-weight: 600; padding: 0.85rem 1.3rem; cursor: pointer; text-decoration: none; display: inline-block; }
+.scale .btn { width: 100%; font-size: 1.02rem; }
+.fine { font-size: 0.8rem; color: var(--panel-soft); }
+
+/* 절차 */
+.steps { list-style: none; padding: 0; margin: 2.25rem 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.5rem; counter-reset: s; }
+@media (max-width: 860px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 480px) { .steps { grid-template-columns: 1fr; } }
+.steps li { counter-increment: s; display: grid; gap: 0.4rem; align-content: start; }
+.steps li::before { content: counter(s); font-family: var(--digits); font-weight: 700; font-size: 1.6rem; color: var(--cobalt); line-height: 1; }
+.steps p { color: var(--soft); font-size: 0.95rem; }
+
+/* 품목 표 */
+.band { background: var(--sheet); border-block: 1px solid var(--rule); }
+.split { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 3rem; align-items: start; }
+@media (max-width: 860px) { .split { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; } }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.95rem; }
+th, td { text-align: left; padding: 0.8rem 0.75rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font-weight: 600; color: var(--soft); font-size: 0.85rem; }
+td.n { font-variant-numeric: tabular-nums; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+
+/* 서류 */
+.docs { list-style: none; padding: 0; margin: 2rem 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 0; border-top: 1px solid var(--rule); }
+.docs li { padding: 1.1rem 1.25rem 1.1rem 0; border-bottom: 1px solid var(--rule); display: grid; gap: 0.25rem; }
+.docs p { color: var(--soft); font-size: 0.9rem; }
+
+/* 정기 수거 */
+.regular { background: var(--cobalt); color: var(--cobalt-ink); border-radius: 18px; padding: 2rem; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.5rem; align-items: center; }
+@media (max-width: 700px) { .regular { grid-template-columns: minmax(0, 1fr); } }
+.regular p { opacity: 0.9; margin-top: 0.5rem; max-width: 56ch; }
+.regular .btn { background: var(--cobalt-ink); color: var(--cobalt); }
+
+/* 폼 */
+.form { background: var(--sheet); border: 1px solid var(--rule); border-radius: 18px; padding: 1.75rem; display: grid; gap: 1rem; min-width: 0; }
+.fgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+@media (max-width: 560px) { .fgrid { grid-template-columns: 1fr; } }
+.form label { display: grid; gap: 0.35rem; font-size: 0.9rem; font-weight: 500; }
+.form input, .form select { border: 1px solid var(--rule); background: var(--paper); color: var(--ink); border-radius: 10px; padding: 0.65rem 0.75rem; width: 100%; }
+.checks { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.checks label { display: flex; align-items: center; gap: 0.4rem; border: 1px solid var(--rule); border-radius: 999px; padding: 0.35rem 0.85rem; font-weight: 400; cursor: pointer; }
+.checks input { width: auto; }
+.done { border: 1px solid var(--ok); color: var(--ok); border-radius: 12px; padding: 1rem 1.1rem; font-weight: 500; }
+.form .note { font-size: 0.82rem; color: var(--soft); }
+
+/* 매입 파트너 피드 */
+.feed { display: grid; gap: 0.75rem; }
+.lot { background: var(--panel); color: var(--panel-fg); border-radius: 14px; padding: 1.1rem 1.25rem; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.5rem 1.25rem; align-items: center; }
+@media (max-width: 520px) { .lot { grid-template-columns: minmax(0, 1fr); } }
+.lot .what { font-weight: 600; }
+.lot .where { color: var(--panel-soft); font-size: 0.88rem; }
+.lot .nums { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; font-variant-numeric: tabular-nums; font-size: 0.92rem; margin-top: 0.35rem; }
+.lot .nums b { font-family: var(--digits); color: var(--readout); font-size: 1.15rem; font-weight: 600; }
+.lot .act { display: grid; gap: 0.35rem; justify-items: end; }
+@media (max-width: 520px) { .lot .act { justify-items: start; } }
+.lot .left { font-family: var(--digits); font-variant-numeric: tabular-nums; color: var(--panel-soft); font-size: 0.9rem; }
+.lot .btn { padding: 0.6rem 1rem; font-size: 0.92rem; }
+.lot .btn[disabled] { background: transparent; color: var(--readout); border: 1px solid var(--readout); cursor: default; }
+.tag { display: inline-block; font-size: 0.75rem; border: 1px solid rgba(255,255,255,0.3); color: var(--panel-soft); border-radius: 999px; padding: 0 0.5rem; margin-left: 0.4rem; vertical-align: 1px; }
+.compare td:first-child { color: var(--soft); white-space: nowrap; }
+.compare td:last-child { font-weight: 600; }
+
+footer { padding-block: 2.5rem 3rem; color: var(--soft); font-size: 0.85rem; border-top: 1px solid var(--rule); }
+footer .wrap { display: grid; gap: 0.4rem; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .readout .big { transition: color 0.2s; }
+  .readout.flash .big { color: var(--panel-fg); }
+}
+</style>
+
+</head>
+<body>
+<div class="notice"><div class="wrap">영원이 (주)같다에 제안하는 화면 시안입니다. 빼기의 공식 페이지가 아니며, 금액과 물량은 모두 예시입니다.</div></div>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">빼기 B2B<small>기업 불용품 매입</small></div>
+    <nav class="tabs" aria-label="화면 선택">
+      <a href="#company" id="tabCompany">기업 고객</a>
+      <a href="#partner" id="tabPartner">매입 파트너</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<!-- ============ 기업 고객 ============ -->
+<div id="viewCompany">
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>사무실과 공장의 불용품, 사진을 올리면 오늘 시세로 매입합니다</h1>
+        <p class="sub">처리업체를 찾고 견적을 비교할 필요가 없습니다. 무게만 알려 주시면 KG당 매입가를 바로 알려 드리고, 해체부터 반출과 정산까지 한 번에 끝냅니다.</p>
+        <ul class="gets">
+          <li>재질별 당일 시세 기준 KG 단가</li>
+          <li>품의에 바로 쓰는 견적서와 계근표</li>
+          <li>빠르면 다음 날 해체팀 방문</li>
+        </ul>
+      </div>
+
+      <form class="scale" id="quote" aria-label="사진으로 견적 받기">
+        <div class="drop">
+          <span class="t">현장 사진</span>
+          <input type="file" id="photo" accept="image/*" multiple aria-label="현장 사진 올리기">
+        </div>
+        <p class="ai" id="ai" aria-live="polite"></p>
+        <div class="row2">
+          <label for="mat">주요 재질
+            <select id="mat">
+              <option value="furniture" selected>사무가구 (철제 혼합)</option>
+              <option value="steel">고철 (생철·중량)</option>
+              <option value="rack">물류 랙·앵글</option>
+              <option value="stainless">스테인리스</option>
+              <option value="copper">구리 (전선·동관)</option>
+              <option value="alu">알루미늄 (샤시·프로파일)</option>
+              <option value="it">IT·전산 장비</option>
+            </select>
+          </label>
+          <label for="kg">추정 무게 (kg)
+            <input type="number" id="kg" min="0" step="10" value="2400" inputmode="numeric">
+          </label>
+        </div>
+        <label for="site">현장 조건
+          <select id="site">
+            <option value="0">1층이나 지상 반출, 해체 불필요</option>
+            <option value="15" selected>엘리베이터 반출, 일부 해체 필요</option>
+            <option value="30">계단 반출 또는 대형 설비 해체</option>
+          </select>
+        </label>
+        <div class="readout" id="readout" aria-live="polite">
+          <span class="cap">예상 매입가</span>
+          <span class="big" id="pay">432,000<span>원</span></span>
+          <div class="meta">
+            <span>KG당 <b id="unit">180원</b></span>
+            <span>방문 가능 <b id="visit">11월 26일 (목) 오전</b></span>
+          </div>
+        </div>
+        <button type="submit" class="btn">이 견적으로 방문 예약하기</button>
+        <p class="fine">최종 금액은 현장 계근 무게로 정산합니다. 추정 무게와 달라지면 같은 KG 단가로 다시 계산해 드립니다.</p>
+      </form>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <h2>이렇게 진행됩니다</h2>
+      <ol class="steps">
+        <li><h3>사진과 무게 입력</h3><p>현장 사진과 대략의 무게, 반출 희망일을 입력합니다. 무게를 모르면 품목 수량만 적어도 됩니다.</p></li>
+        <li><h3>KG 단가 견적</h3><p>재질 구성과 당일 시세로 매입가를 바로 보여 드립니다. 내부 품의용 견적서도 함께 받습니다.</p></li>
+        <li><h3>해체·반출·계근</h3><p>해체 전문팀이 방문해 분리하고 반출합니다. 공인 계근대에서 무게를 확정합니다.</p></li>
+        <li><h3>정산</h3><p>계근표 무게로 금액을 확정하고 대금과 세금계산서를 보내 드립니다.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap split">
+      <div>
+        <h2>매입하는 품목</h2>
+        <p class="lead">무게를 모르실 때는 오른쪽 기준 무게에 수량을 곱해 입력하세요. 해체가 필요한 설비도 한 번에 맡길 수 있습니다.</p>
+      </div>
+      <div class="tbl">
+        <table>
+          <thead><tr><th>품목</th><th>예시</th><th>기준 무게</th></tr></thead>
+          <tbody>
+            <tr><td>사무가구</td><td>철제 책상, 캐비닛, 파티션, 금고</td><td class="n">책상 약 35kg · 캐비닛 약 45kg</td></tr>
+            <tr><td>고철·중량물</td><td>기계 프레임, H빔, 철판, 배관</td><td class="n">계근으로 확정</td></tr>
+            <tr><td>물류 랙</td><td>중량 랙, 경량 랙, 앵글 선반</td><td class="n">중량 랙 1칸 약 80kg</td></tr>
+            <tr><td>비철</td><td>구리 전선·동관, 알루미늄 샤시, 스테인리스</td><td class="n">재질별 분리 계근</td></tr>
+            <tr><td>IT·전산 장비</td><td>PC, 서버, 랙 캐비닛, 복합기</td><td class="n">데스크톱 약 8kg · 서버 약 25kg</td></tr>
+            <tr><td>설비</td><td>공조기, 냉동기, 변압기, 생산 라인</td><td class="n">현장 확인 후 견적</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <h2>담당자가 필요한 서류를 모두 드립니다</h2>
+      <ul class="docs">
+        <li><h3>품의용 견적서</h3><p>KG 단가와 예상 금액이 적힌 견적서를 PDF로 받습니다.</p></li>
+        <li><h3>계근표</h3><p>공인 계근대에서 측정한 무게 기록입니다.</p></li>
+        <li><h3>세금계산서</h3><p>매입 대금 지급과 함께 발행합니다.</p></li>
+        <li><h3>처리 확인서</h3><p>재활용과 폐기 내역을 품목별로 정리해 드립니다.</p></li>
+        <li><h3>데이터 파기 증명서</h3><p>PC와 서버의 저장장치를 파쇄하고 증빙을 남깁니다.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="regular">
+        <div>
+          <h2>불용품이 주기적으로 나온다면 정기 수거로 바꾸세요</h2>
+          <p>매달 또는 분기마다 같은 시기에 방문해 수거하고 정산합니다. 교체 주기가 다가온 집기와 IT 장비는 렌탈이나 구독으로 바꾸는 방안도 함께 안내해 드립니다.</p>
+        </div>
+        <a class="btn" href="#company-form">정기 수거 상담 신청</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="company-form">
+    <div class="wrap split">
+      <div>
+        <h2>견적 상담 신청</h2>
+        <p class="lead">사진 견적을 받으셨다면 담당자 정보만 남겨 주세요. 영업일 기준 2시간 안에 방문 일정을 확정해 연락드립니다.</p>
+      </div>
+      <form class="form" id="companyForm">
+        <div class="fgrid">
+          <label for="cName">회사명<input id="cName" required placeholder="예: 한빛물류"></label>
+          <label for="cDept">부서<input id="cDept" placeholder="예: 총무팀"></label>
+          <label for="cPerson">담당자<input id="cPerson" required placeholder="이름"></label>
+          <label for="cPhone">연락처<input id="cPhone" required inputmode="tel" placeholder="010-0000-0000"></label>
+          <label for="cAddr">현장 주소<input id="cAddr" placeholder="시·구·동까지"></label>
+          <label for="cDate">반출 희망일<input id="cDate" type="date"></label>
+        </div>
+        <button class="btn" type="submit">상담 신청하기</button>
+        <p class="done" id="companyDone" hidden>상담 신청을 접수했습니다. 시안 화면이라 실제로 전송되지는 않습니다.</p>
+        <p class="note">입력한 정보는 견적과 방문 일정 안내에만 사용합니다.</p>
+      </form>
+    </div>
+  </section>
+</div>
+
+<!-- ============ 매입 파트너 ============ -->
+<div id="viewPartner" hidden>
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>입찰을 기다리지 말고, 계근이 끝난 물량을 바로 받으세요</h1>
+        <p class="sub">기업 현장에서 해체와 계근까지 끝난 확정 물량을 재질과 지역에 맞춰 알림으로 보내 드립니다. 현장 조사도, 낙찰 대기도 필요 없습니다.</p>
+        <ul class="gets">
+          <li>무게가 확정된 물량만 올라옵니다</li>
+          <li>선착순 또는 2시간 짧은 역경매</li>
+          <li>인수 다음 날 대금 정산</li>
+        </ul>
+      </div>
+      <div class="feed" id="feed" aria-label="오늘 올라온 물량 예시"></div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap split">
+      <div>
+        <h2>공매·경매와 무엇이 다른가요</h2>
+        <p class="lead">공공 입찰은 공고부터 개찰까지 기다리는 동안 인력과 장비가 쉽니다. 빼기 B2B는 확정된 물량을 바로 연결합니다.</p>
+      </div>
+      <div class="tbl">
+        <table class="compare">
+          <thead><tr><th></th><th>공매·법원 경매</th><th>빼기 B2B</th></tr></thead>
+          <tbody>
+            <tr><td>물량 확보까지</td><td>공고부터 개찰까지 수 주</td><td>알림 후 2시간 이내</td></tr>
+            <tr><td>확보 여부</td><td>낙찰받지 못할 수 있음</td><td>선착순 또는 역경매로 즉시 확정</td></tr>
+            <tr><td>현장 조사</td><td>입찰 전에 직접 방문</td><td>계근표와 사진으로 확인</td></tr>
+            <tr><td>무게</td><td>추정치로 입찰</td><td>계근 완료된 확정 무게</td></tr>
+            <tr><td>해체·반출</td><td>낙찰자가 직접 수행</td><td>해체팀이 분리·상차까지 완료</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>파트너 등록 절차</h2>
+      <ol class="steps">
+        <li><h3>사업자 확인</h3><p>사업자등록증과 고물상 신고증 또는 재활용업 허가증을 올립니다.</p></li>
+        <li><h3>재질·지역 선택</h3><p>매입할 재질과 인수 가능한 지역을 고르면 그 조건의 물량만 알림으로 받습니다.</p></li>
+        <li><h3>단가 기준 등록</h3><p>재질별 희망 매입 단가를 등록해 두면 조건이 맞는 물량에 우선 배정됩니다.</p></li>
+        <li><h3>인수와 정산</h3><p>배정된 물량을 지정 시간에 인수하고, 인수 다음 날 대금을 정산합니다.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="band" id="partner-form">
+    <div class="wrap split">
+      <div>
+        <h2>매입 파트너 등록</h2>
+        <p class="lead">해체·분리 작업이 가능한 전문팀도 함께 모집합니다. 장비와 인원을 적어 주시면 현장 배정에 반영합니다.</p>
+      </div>
+      <form class="form" id="partnerForm">
+        <div class="fgrid">
+          <label for="pName">상호<input id="pName" required placeholder="예: 대성자원"></label>
+          <label for="pBiz">사업자번호<input id="pBiz" required inputmode="numeric" placeholder="000-00-00000"></label>
+          <label for="pPhone">연락처<input id="pPhone" required inputmode="tel" placeholder="010-0000-0000"></label>
+          <label for="pArea">인수 가능 지역
+            <select id="pArea">
+              <option>서울·경기 전역</option>
+              <option>인천·경기 서부</option>
+              <option>경기 남부·충청</option>
+              <option>영남권</option>
+              <option>호남권</option>
+            </select>
+          </label>
+        </div>
+        <fieldset style="border:0;padding:0;margin:0;display:grid;gap:0.5rem">
+          <legend style="font-size:0.9rem;font-weight:500;padding:0;margin-bottom:0.5rem">매입 재질</legend>
+          <div class="checks">
+            <label><input type="checkbox" id="m1" checked>고철</label>
+            <label><input type="checkbox" id="m2">스테인리스</label>
+            <label><input type="checkbox" id="m3">구리</label>
+            <label><input type="checkbox" id="m4">알루미늄</label>
+            <label><input type="checkbox" id="m5">폐전자</label>
+            <label><input type="checkbox" id="m6">해체 작업팀</label>
+          </div>
+        </fieldset>
+        <label for="pEquip">보유 장비<input id="pEquip" placeholder="예: 5톤 집게차 1대, 산소절단기, 작업자 4명"></label>
+        <button class="btn" type="submit">파트너 등록 신청</button>
+        <p class="done" id="partnerDone" hidden>파트너 등록 신청을 접수했습니다. 시안 화면이라 실제로 전송되지는 않습니다.</p>
+      </form>
+    </div>
+  </section>
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>이 화면은 영원이 (주)같다에 빼기 B2B 서비스를 제안하기 위해 만든 시안입니다.</p>
+    <p>표시된 단가, 금액, 물량, 회사명 예시는 모두 설명을 위한 가정치이며 실제 시세나 거래가 아닙니다.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var fmt = function (n) { return Math.round(n).toLocaleString("ko-KR"); };
+
+  /* ---------- 탭 ---------- */
+  function route() {
+    var partner = location.hash === "#partner" || location.hash === "#partner-form";
+    $("viewCompany").hidden = partner;
+    $("viewPartner").hidden = !partner;
+    $("tabCompany").setAttribute("aria-current", partner ? "false" : "page");
+    $("tabPartner").setAttribute("aria-current", partner ? "page" : "false");
+    if (location.hash === "#partner" || location.hash === "#company") window.scrollTo(0, 0);
+  }
+  window.addEventListener("hashchange", route);
+  route();
+
+  /* ---------- 견적 (예시 단가, 원/kg) ---------- */
+  var M = {
+    furniture: { base: 300, r: 0.65, mix: "고철 70%, 혼합 부속 30%" },
+    steel:     { base: 380, r: 0.87, mix: "생철 90%, 기타 10%" },
+    rack:      { base: 370, r: 0.86, mix: "앵글·빔 95%, 볼트·부속 5%" },
+    stainless: { base: 1500, r: 0.88, mix: "STS304 85%, 고철 15%" },
+    copper:    { base: 10800, r: 0.91, mix: "피복전선 80%, 동관 20%" },
+    alu:       { base: 1900, r: 0.88, mix: "알루미늄 85%, 유리·고무 15%" },
+    it:        { base: 600, r: 0.70, mix: "고철 50%, 기판·비철 25%, 플라스틱 25%" }
+  };
+  var days = ["일", "월", "화", "수", "목", "금", "토"];
+  function visitText(extraDays) {
+    var d = new Date(); d.setDate(d.getDate() + 1 + extraDays);
+    if (d.getDay() === 0) d.setDate(d.getDate() + 1);
+    return (d.getMonth() + 1) + "월 " + d.getDate() + "일 (" + days[d.getDay()] + ") 오전";
+  }
+  function calc() {
+    var m = M[$("mat").value];
+    var kg = Math.max(0, parseFloat($("kg").value) || 0);
+    var cost = parseFloat($("site").value) || 0;
+    var unit = Math.max(0, Math.round((m.base * m.r - cost) / 10) * 10);
+    $("pay").firstChild.nodeValue = fmt(unit * kg);
+    $("unit").textContent = fmt(unit) + "원";
+    $("visit").textContent = visitText(cost >= 30 ? 1 : 0);
+    var n = $("photo").files ? $("photo").files.length : 0;
+    $("ai").innerHTML = (n ? "사진 " + n + "장 분석 결과 " : "예시 분석 결과 ") + "<b>" + m.mix + "</b>";
+    var r = $("readout"); r.classList.add("flash"); setTimeout(function () { r.classList.remove("flash"); }, 160);
+  }
+  ["mat", "kg", "site", "photo"].forEach(function (id) {
+    $(id).addEventListener("input", calc);
+    $(id).addEventListener("change", calc);
+  });
+  $("quote").addEventListener("submit", function (e) {
+    e.preventDefault();
+    location.hash = "company-form";
+    $("cName").focus();
+  });
+  calc();
+
+  /* ---------- 폼 (데모) ---------- */
+  [["companyForm", "companyDone"], ["partnerForm", "partnerDone"]].forEach(function (p) {
+    $(p[0]).addEventListener("submit", function (e) { e.preventDefault(); $(p[1]).hidden = false; });
+  });
+
+  /* ---------- 물량 피드 (예시) ---------- */
+  var lots = [
+    { what: "물류센터 랙 철거 · 고철", where: "경기 이천시", kg: 38400, price: 390, mins: 47 },
+    { what: "공장 라인 교체 · 중량 고철", where: "인천 남동구", kg: 17800, price: 400, mins: 82 },
+    { what: "사옥 이전 · 철제 사무가구", where: "서울 영등포구", kg: 2460, price: 240, mins: 115 },
+    { what: "전기 설비 교체 · 구리 전선", where: "경기 화성시", kg: 1180, price: 10800, mins: 26 }
+  ];
+  var t0 = Date.now();
+  lots.forEach(function (l, i) {
+    var el = document.createElement("article");
+    el.className = "lot";
+    el.innerHTML =
+      '<div><div class="what">' + l.what + '<span class="tag">예시</span></div>' +
+      '<div class="where">' + l.where + ' · 계근 완료</div>' +
+      '<div class="nums"><span>확정 <b>' + fmt(l.kg) + 'kg</b></span><span>제시가 <b>' + fmt(l.price) + '원/kg</b></span></div></div>' +
+      '<div class="act"><span class="left" id="left' + i + '"></span>' +
+      '<button type="button" class="btn" id="take' + i + '">인수 신청</button></div>';
+    $("feed").appendChild(el);
+    $("take" + i).addEventListener("click", function () {
+      this.disabled = true; this.textContent = "인수 신청함";
+    });
+  });
+  function tick() {
+    var passed = (Date.now() - t0) / 1000;
+    lots.forEach(function (l, i) {
+      var s = Math.max(0, l.mins * 60 - passed);
+      var h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), sec = Math.floor(s % 60);
+      $("left" + i).textContent = "마감까지 " + (h ? h + ":" : "") + String(m).padStart(2, "0") + ":" + String(sec).padStart(2, "0");
+    });
+  }
+  tick(); setInterval(tick, 1000);
+})();
+</script>
+</body>
+</html>
